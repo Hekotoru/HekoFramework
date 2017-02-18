@@ -14,7 +14,7 @@ namespace Server
         {
             IPHostEntry ipHost = Dns.Resolve("localhost");
             IPAddress ipAddr = ipHost.AddressList[0];
-            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 8080);
+            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 8081);
 
             Socket sListener = new Socket(AddressFamily.InterNetwork,
                                           SocketType.Stream, ProtocolType.Tcp);

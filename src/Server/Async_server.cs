@@ -28,7 +28,7 @@ namespace Server
             // running the listener is "host.contoso.com".  
             IPHostEntry ipHostInfo = Dns.Resolve("localhost");
             IPAddress ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 8080);
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 8081);
 
             // Create a TCP/IP socket.  
             Socket listener = new Socket(AddressFamily.InterNetwork,

@@ -48,7 +48,7 @@ namespace Server
                 connectDone.WaitOne();
 
                 // Send test data to the remote device.  
-                Send(client, "This is a test<EOF>");
+                Send(client, "This is a test\r\n\r\n");
                 sendDone.WaitOne();
 
                 // Receive the response from the remote device.  
