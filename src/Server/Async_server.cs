@@ -107,10 +107,10 @@ namespace Server
                 {
                     // All the data has been read from the   
                     // client. Display it on the console.  
-                    //Console.WriteLine("Read {0} bytes from socket. \n Data : {1}",
-                    //    content.Length, content);
-                    // Echo the data back to the client.  
-                    Send(handler, content);
+                    Console.WriteLine("Read {0} bytes from socket. \n Data : {1}",
+                        content.Length, content);
+                    //Echo the data back to the client.
+                   Send(handler, content);
                 }
                 else
                 {

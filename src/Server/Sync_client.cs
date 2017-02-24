@@ -20,7 +20,7 @@ namespace Server
                 // Establish the remote end point for the socket 
                 IPHostEntry ipHost = Dns.Resolve("45.55.77.201");
                 IPAddress ipAddr = ipHost.AddressList[0];
-                IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 1337);
+                IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 8888);
 
                 Socket sender = new Socket(AddressFamily.InterNetwork,
                                            SocketType.Stream, ProtocolType.Tcp);
