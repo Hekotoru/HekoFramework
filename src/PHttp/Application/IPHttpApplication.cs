@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace PHttp.Application
 {
+    #region delegate
+    public delegate string PreApplicationStartMethod(Type type, string method);
+
+    public delegate string ApplicationStartMethod(Type type, string method);
+    #endregion delegate
+
     public interface IPHttpApplication
     {
         #region Properties
@@ -19,15 +25,9 @@ namespace PHttp.Application
         #endregion Methods
 
         #region Events
-        event EventHandler PreApplicationStart;
-        event EventHandler ApplicationStart;
+        event PreApplicationStartMethod PreApplicationStart;
+        event ApplicationStartMethod ApplicationStart;
         #endregion Events
-
-        #region Delegate
-        Delegate PreApplicationStartMethod(Type type, string method);
-
-        Delegate ApplicationStartMethod(Type type, string method);
-        #endregion Delegate
 
     }
 }

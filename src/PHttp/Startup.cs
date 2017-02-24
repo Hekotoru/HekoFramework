@@ -41,7 +41,7 @@ namespace PHttp
 
             foreach (var el in impl)
             {
-                Console.WriteLine($"Msg: {el.Start()}");
+                Console.WriteLine("Msg: {0}", el.Start());
             }
 
             Console.ReadKey();

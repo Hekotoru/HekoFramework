@@ -10,7 +10,7 @@ namespace Heko
         {
             string ApplicationsDir = ConfigurationManager.AppSettings["ApplicationsDir"];
 
-            Console.WriteLine($"Looking for apps in {ApplicationsDir}");
+            Console.WriteLine("Looking for apps in {0}",ApplicationsDir);
             Startup.LoadApps(ApplicationsDir);
         }
     }

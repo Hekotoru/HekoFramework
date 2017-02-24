@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,6 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\IPHttpApplication.cs" />
+    <Compile Include="HttpClient.cs" />
+    <Compile Include="HttpServer.cs" />
+    <Compile Include="HttpServerState.cs" />
+    <Compile Include="HttpServerUtility.cs" />
+    <Compile Include="HttpTimeoutManager .cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PHttp.Application;
 
 namespace Mvc
 {
@@ -21,20 +22,33 @@ namespace Mvc
             }
         }
 
-        public event EventHandler ApplicationStart;
-        public event EventHandler PreApplicationStart;
-
-        public Delegate ApplicationStartMethod(Type type, string method)
+        event ApplicationStartMethod IPHttpApplication.ApplicationStart
         {
-            throw new NotImplementedException();
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        event PreApplicationStartMethod IPHttpApplication.PreApplicationStart
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public string ExecuteAction()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Delegate PreApplicationStartMethod(Type type, string method)
         {
             throw new NotImplementedException();
         }
@@ -44,5 +58,6 @@ namespace Mvc
             Console.WriteLine("Heko using reflection :D");
             return null;
         }
+
     }
 }
