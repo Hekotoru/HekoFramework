@@ -33,10 +33,18 @@ namespace PHttp
                     continue;
                 }
 
-                currentAssembly.GetTypes()
-                    .Where(t => t != typeof(Application.IPHttpApplication) && typeof(Application.IPHttpApplication).IsAssignableFrom(t))
-                    .ToList()
-                    .ForEach(x => impl.Add((Application.IPHttpApplication)Activator.CreateInstance(x)));
+                var types = currentAssembly.GetTypes();
+                foreach(var type in types)
+                {
+                    if(type != typeof(Application.IPHttpApplication) && typeof(Application.IPHttpApplication).IsAssignableFrom(type))
+                    {
+                        impl.Add((Application.IPHttpApplication)Activator.CreateInstance(type));
+                    }
+                }
+                //currentAssembly.GetTypes()
+                //    .Where(t => t != typeof(Application.IPHttpApplication) && typeof(Application.IPHttpApplication).IsAssignableFrom(t))
+                //    .ToList()
+                //    .ForEach(x => impl.Add((Application.IPHttpApplication)Activator.CreateInstance(x)));
             }
 
             foreach (var el in impl)
