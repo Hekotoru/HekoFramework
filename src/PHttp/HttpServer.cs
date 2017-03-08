@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PHttp
 {
-    class HttpServer : IDisposable
+    public class HttpServer : IDisposable
     {
         #region properties
         public IPEndPoint EndPoint { get; private set; }
