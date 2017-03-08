@@ -112,7 +112,7 @@ namespace PHttp
         {
             if(!_disposed)
             {
-                if(_state == HttpServerState.Started)
+                if(State == HttpServerState.Started)
                 {
                     Stop();
                 }
