@@ -118,7 +118,7 @@ namespace PHttp
                 }
                 if(_clientsChangedEvent != null)
                 {
-                    _clientsChangedEvent.Dispose();
+                    _clientsChangedEvent.Close();
                     _clientsChangedEvent = null;
                 }
                 if(TimeoutManager != null)
