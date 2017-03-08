@@ -123,7 +123,7 @@ namespace PHttp
             public TimeoutItem(long expires, IAsyncResult asyncResult, IDisposable disposable)
             {
                 if (asyncResult == null)
-                    throw new ArgumentNullException(asyncResult.ToString()));
+                    throw new ArgumentNullException(asyncResult.ToString());
 
                 Expires = expires;
                 AsyncResult = asyncResult;
