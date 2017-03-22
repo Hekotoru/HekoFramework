@@ -63,6 +63,13 @@ namespace PHttp
                 Dispose();
             }
         }
+
+        public void BeginRequest()
+        {
+            Reset();
+            BeginRead();
+        }
+
         private void ReadCallback(IAsyncResult AsyncResult)
         {
             if (_disposed)
