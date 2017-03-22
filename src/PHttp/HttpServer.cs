@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -20,14 +21,16 @@ namespace PHttp
         public TimeSpan WriteTimeout;
         public TimeSpan ShutdownTimeout;
         public int Port { get; private set; }
-        public HttpServerState State { get { return _state; } set { if (value != _state) { _state = value; OnStateChanged(EventArgs.Empty); } } }
+        public HttpServerState State { get { return _state; } set { if (value != _state) { HttpServerState previous = _state;  _state = value; OnStateChanged(new HttpEventArgs(previous, _state));} } }
 
         private TcpListener _listener;
         internal HttpTimeoutManager TimeoutManager { get; private set; }
         internal HttpServerUtility ServerUtility { get; private set; }
-        private AutoResetEvent _clientsChangedEvent = new AutoResetEvent(false);
+        private AutoResetEvent _clientsChangedEvent =  new AutoResetEvent(false);
         private bool _disposed;
         private HttpServerState _state = HttpServerState.Stopped;
+        private Object _syncLock = new object();
+        private Dictionary<HttpClient, bool> _clients = new Dictionary<HttpClient, bool>();
         #endregion properties
 
         #region Events
@@ -75,7 +78,19 @@ namespace PHttp
         }
         public void Stop()
         {
-            throw new NotImplementedException();
+            try
+            {
+                VerifyState(HttpServerState.Started);
+                State = HttpServerState.Stopping;
+                _listener.Stop();
+                StopClients();
+            }
+            catch(Exception e)
+            {
+                State = HttpServerState.Stopped;
+                Console.WriteLine("Failed to stop HTTP server. | Exception: " + e.Message);
+                throw new PHttpException("Failed to stop HTTP server.");
+            }
         }
         private void VerifyState(HttpServerState state)
         {
@@ -86,7 +101,65 @@ namespace PHttp
         }
         private void StopClients()
         {
-            throw new NotImplementedException();
+            var shutdownStarted = DateTime.Now;
+            bool forceShutdown = false;
+            // Clients that are waiting for new requests are closed.
+
+            List<HttpClient> clients;
+            lock (_syncLock)
+            {
+                clients = new List<HttpClient>(_clients.Keys);
+            }
+
+            foreach (var client in clients)
+            {
+                client.RequestClose();
+            }
+
+            // First give all clients a chance to complete their running requests.
+            while (true)
+            {
+                lock (_syncLock)
+                {
+                    if (_clients.Count == 0)
+                        break;
+                }
+
+                var shutdownRunning = DateTime.Now - shutdownStarted;
+
+                if (shutdownRunning >= ShutdownTimeout)
+                {
+                    forceShutdown = true;
+                    break;
+                }
+                _clientsChangedEvent.WaitOne(ShutdownTimeout - shutdownRunning);
+            }
+
+            if (!forceShutdown)
+                return;
+
+            // If there are still clients running after the timeout, their
+            // connections will be forcibly closed.
+            lock (_syncLock)
+            {
+                clients = new List<HttpClient>(_clients.Keys);
+            }
+
+            foreach (var client in clients)
+            {
+                client.ForceClose();
+            }
+
+            // Wait for the registered clients to be cleared.
+            while (true)
+            {
+                lock (_syncLock)
+                {
+                    if (_clients.Count == 0)
+                        break;
+                }
+                _clientsChangedEvent.WaitOne();
+            }
         }
         private void BeginAcceptTcpClient()
         {
@@ -98,15 +171,57 @@ namespace PHttp
         }
         private void AcceptTcpClientCallback(IAsyncResult asyncResult)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var listener = _listener;
+                if (listener == null)
+                {
+                    return;
+                }
+                var tcpClient = listener.EndAcceptTcpClient(asyncResult);
+                if (_state == HttpServerState.Stopped)
+                {
+                    tcpClient.Close();
+                }
+                HttpClient client = new HttpClient(this);
+                RegisterClient(client);
+                client.BeginRequest();
+                BeginAcceptTcpClient();
+            }
+            catch (ObjectDisposedException ob)
+            {
+                //
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
         private void RegisterClient(HttpClient client)
         {
-            throw new NotImplementedException();
+            if(client == null)
+            {
+                throw new NotImplementedException();
+            }
+            lock(_syncLock)
+            {
+                _clients.Add(client,true);
+                _clientsChangedEvent.Set();
+            }
+
         }
         internal void UnregisterClient(HttpClient client)
         {
-            throw new NotImplementedException();
+            if(client == null)
+            {
+                throw new ArgumentNullException();
+            }
+            lock(_syncLock)
+            {
+                Debug.Assert(_clients.ContainsKey(client));
+                _clients.Remove(client);
+                _clientsChangedEvent.Set();
+            }
         }
         public void Dispose()
         {
@@ -131,11 +246,36 @@ namespace PHttp
             //throw new NotImplementedException();
         }
 
+        internal void RaiseRequest(HttpContext context)
+        {
+            if (context == null)
+                throw new ArgumentNullException("context");
+            OnRequestReceived(new HttpRequestEventArgs(context));
+        }
+
+        internal bool RaiseUnhandledException(HttpContext context, Exception exception)
+        {
+            if (context == null)
+                throw new ArgumentNullException("context");
+            var e = new HttpExceptionEventArgs(context, exception);
+            OnUnhandledException(e);
+            return e.Handled;
+        }
+
+        public void OnRequestReceived(HttpRequestEventArgs EventArgs)
+        {
+            //
+        }
+
+        public void OnUnhandledException(HttpExceptionEventArgs EventArgs)
+        {
+            //
+        }
         protected virtual void OnStateChanged(EventArgs e)
         {
             if(StateChanged != null)
             {
-                StateChanged(this, e);
+                StateChanged.Invoke(this, e);
             }
         }
         #endregion methods
