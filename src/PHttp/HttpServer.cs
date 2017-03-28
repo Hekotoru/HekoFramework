@@ -34,13 +34,15 @@ namespace PHttp
         #endregion properties
 
         #region Events
-        private event EventHandler StateChanged;
+        public event EventHandler StateChanged;
+        public event HttpRequestEventHandler RequestReceived;
+        public event HttpExceptionEventHandler UnhandledException;
         #endregion Events
 
         public HttpServer(int port)
         {
             Port = port;
-            State = HttpServerState.Stopped;
+            //State = HttpServerState.Stopped;
             EndPoint = new IPEndPoint(IPAddress.Loopback, Port);
             ReadBufferSize = 4096;
             WriteBufferSize = 4096;
@@ -48,6 +50,12 @@ namespace PHttp
             ReadTimeout = TimeSpan.FromSeconds(90);
             WriteTimeout = TimeSpan.FromSeconds(90);
             ServerBanner = String.Format("PHttp/{0}", GetType().Assembly.GetName().Version);
+        }
+
+        public HttpServer() :
+            this(8081)
+        {
+
         }
 
         #region methods
@@ -179,11 +187,12 @@ namespace PHttp
                     return;
                 }
                 var tcpClient = listener.EndAcceptTcpClient(asyncResult);
-                if (_state == HttpServerState.Stopped)
+                if (_state != HttpServerState.Started)
                 {
                     tcpClient.Close();
+                    return;
                 }
-                HttpClient client = new HttpClient(this);
+                HttpClient client = new HttpClient(this,tcpClient);
                 RegisterClient(client);
                 client.BeginRequest();
                 BeginAcceptTcpClient();
@@ -262,20 +271,28 @@ namespace PHttp
             return e.Handled;
         }
 
-        public void OnRequestReceived(HttpRequestEventArgs EventArgs)
+
+        protected virtual void OnUnhandledException(HttpExceptionEventArgs e)
         {
-            //
+            var ev = UnhandledException;
+            if (ev != null)
+                ev(this, e);
+        }
+        protected virtual void OnStateChanged(HttpEventArgs e)
+        {
+            var ev = StateChanged;
+            if(ev != null)
+            {
+                ev(this, e);
+            }
         }
 
-        public void OnUnhandledException(HttpExceptionEventArgs EventArgs)
+        protected virtual void OnRequestReceived(HttpRequestEventArgs e)
         {
-            //
-        }
-        protected virtual void OnStateChanged(EventArgs e)
-        {
-            if(StateChanged != null)
+            var ev = RequestReceived;
+            if(ev != null)
             {
-                StateChanged.Invoke(this, e);
+                ev(this, e);
             }
         }
         #endregion methods
