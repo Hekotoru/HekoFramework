@@ -49,6 +49,10 @@
       <Project>{0bd3a589-8d49-4b6e-bb57-34dad3656f62}</Project>
       <Name>Mvc</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PHttp\PHttp.csproj">
+      <Project>{ca0f1115-bde5-42d2-9cb7-eb618860a2ac}</Project>
+      <Name>PHttp</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\custom.html" />
