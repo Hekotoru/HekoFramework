@@ -6,35 +6,11 @@ using System.Threading.Tasks;
 
 namespace PHttp
 {
-    class HttpEventArgs : EventArgs
+    public class HttpEventArgs : EventArgs
     {
-        private HttpServerState _previousState;
+        public HttpServerState _previousState { get; private set; }
 
-        private HttpServerState _newState;
-
-        public HttpServerState PreviousState
-        {
-            get
-            {
-                return _previousState;
-            }
-            set
-            {
-                _previousState = value;
-            }
-        }
-
-        public HttpServerState NextState
-        {
-            get
-            {
-                return _newState;
-            }
-            set
-            {
-                _newState = value;
-            }
-        }
+       public HttpServerState _newState { get; private set; }
 
         public HttpEventArgs(HttpServerState previous, HttpServerState next) : base()
         {

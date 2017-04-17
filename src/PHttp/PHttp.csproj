@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
@@ -51,6 +55,7 @@
     <Compile Include="HttpEventArgs.cs" />
     <Compile Include="HttpExceptionEventHandler.cs" />
     <Compile Include="HttpFileCollection.cs" />
+    <Compile Include="HttpMimeType.cs" />
     <Compile Include="HttpMultiPartItem.cs" />
     <Compile Include="HttpMultiPartRequestParser.cs" />
     <Compile Include="HttpOutputStream.cs" />
@@ -68,11 +73,16 @@
     <Compile Include="HttpUrlEncodedRequestParser.cs" />
     <Compile Include="HttpUtil.cs" />
     <Compile Include="PHttpException.cs" />
+    <Compile Include="PHttpServerConfig.cs" />
+    <Compile Include="PHttpSitesConfig.cs" />
     <Compile Include="ProtocolException.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="config.json" />
+    <None Include="packages.config" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\InternalServerError.html" />
   </ItemGroup>
