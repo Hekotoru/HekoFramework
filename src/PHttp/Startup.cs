@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using System.Configuration;
 using System.Reflection;
 using System.IO;
+using PHttp.Application;
 
 namespace PHttp
 {
     public class Startup
     {
-        public Dictionary<string, Application.IPHttpApplication> _appInstances = new Dictionary<string, Application.IPHttpApplication>();
+        public Dictionary<string, IPHttpApplication> _appInstances = new Dictionary<string, IPHttpApplication>();
 
         /// <summary>
         /// First method that we use as an test for making reflection and load apps.
@@ -43,12 +44,12 @@ namespace PHttp
                     var types = currentAssembly.GetTypes();
                     foreach (var type in types)
                     {
-                        if (type != typeof(Application.IPHttpApplication) && typeof(Application.IPHttpApplication).IsAssignableFrom(type))
+                        if (type != typeof(IPHttpApplication) && typeof(IPHttpApplication).IsAssignableFrom(type))
                         {
                             if (_appInstances.ContainsKey(Dll.virtualPath)) { }
                             else
                             {
-                                _appInstances.Add(Dll.virtualPath, (Application.IPHttpApplication)Activator.CreateInstance(type));
+                                _appInstances.Add(Dll.virtualPath, (IPHttpApplication)Activator.CreateInstance(type));
                             }
                         }
                     }
@@ -67,7 +68,7 @@ namespace PHttp
         /// </summary>
         /// <param name="PhysicalPath">Sting:Application physical path.</param>
         /// <returns>Task(list(IPHttpApplication)): Application instance list.</returns>
-        public async Task<List<Application.IPHttpApplication>> LoadApps(string path)
+        public async Task<List<IPHttpApplication>> LoadApps(string path)
         {
             DirectoryInfo info = new DirectoryInfo(path);
             var impl = new List<Application.IPHttpApplication>();
@@ -95,9 +96,9 @@ namespace PHttp
 
                 foreach (var type in types)
                 {
-                    if (type != typeof(Application.IPHttpApplication) && typeof(Application.IPHttpApplication).IsAssignableFrom(type))
+                    if (type != typeof(IPHttpApplication) && typeof(IPHttpApplication).IsAssignableFrom(type))
                     {
-                        impl.Add((Application.IPHttpApplication)Activator.CreateInstance(type));
+                        impl.Add((IPHttpApplication)Activator.CreateInstance(type));
                     }
                 }
             }
