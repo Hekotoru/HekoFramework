@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mvc", "Mvc\Mvc.csproj", "{0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heko", "Heko\Heko.csproj", "{1DCFD465-12FD-427F-A473-C9653DF9657E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "App\App.csproj", "{457B086E-D42C-4C38-81E8-FF94FB74511A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{1DCFD465-12FD-427F-A473-C9653DF9657E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DCFD465-12FD-427F-A473-C9653DF9657E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DCFD465-12FD-427F-A473-C9653DF9657E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{457B086E-D42C-4C38-81E8-FF94FB74511A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{457B086E-D42C-4C38-81E8-FF94FB74511A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{457B086E-D42C-4C38-81E8-FF94FB74511A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{457B086E-D42C-4C38-81E8-FF94FB74511A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,26 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Mvc
 {
-    public class AResult
+    /// <summary>
+    /// Interface that imitate an ActionResult from C#
+    /// </summary>
+    public interface AResult
     {
-        public static  View ResultView()
-        {
-            return new View();
-        }
-
-        public static Content ResultContent()
-        {
-            return new Content();
-        }
-
-        public static Json ResultJson()
-        {
-            return new Json();
-        }
+        int StatusCode();
+        MemoryStream Content();
+        string ContentType();
     }
 }

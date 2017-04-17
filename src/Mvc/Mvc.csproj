@@ -21,6 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,6 +37,10 @@
       <HintPath>..\packages\Handlebars.Net.1.8.0\lib\portable-net45+sl5+wp8+win8\Handlebars.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,13 +52,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AResult.cs" />
+    <Compile Include="ServerConfiguration.cs" />
     <Compile Include="Content.cs" />
-    <Compile Include="Controller.cs" />
     <Compile Include="ControllerBase.cs" />
+    <Compile Include="FilterAttribute.cs" />
     <Compile Include="HekoTest.cs" />
+    <Compile Include="HttpContext.cs" />
+    <Compile Include="HttpFile.cs" />
+    <Compile Include="HttpMethod.cs" />
     <Compile Include="Json.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Request.cs" />
     <Compile Include="Routes.cs" />
+    <Compile Include="Site.cs" />
     <Compile Include="View.cs" />
   </ItemGroup>
   <ItemGroup>

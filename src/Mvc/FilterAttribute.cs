@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mvc
 {
-    class Controller
+    public abstract class FilterAttribute : Attribute
     {
     }
 }
