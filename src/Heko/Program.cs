@@ -97,7 +97,7 @@ namespace Heko
             }
 
             /// This object is the handler of the respond.
-            RespondHandler ResHandler = new RespondHandler(configurationManager, AsyncAllApps);
+            RequestHandler ResHandler = new RequestHandler(configurationManager, AsyncAllApps);
 
             using (var server = new HttpServer(configurationManager.port))
             {

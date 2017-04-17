@@ -15,7 +15,7 @@ namespace Heko
     /// <summary>
     /// This class is responsible for all responses to the client
     /// </summary>
-    public class RespondHandler
+    public class RequestHandler
     {
         /// <summary>
         /// Container of the Server configuration.
@@ -51,7 +51,7 @@ namespace Heko
         /// Default Constructor.
         /// </summary>
         /// <param name="conf">PHttp.ConfigurationManager: Object of the configuration of the server</param>
-        public RespondHandler(Mvc.ServerConfiguration conf, Task<List<IPHttpApplication>> allApps)
+        public RequestHandler(Mvc.ServerConfiguration conf, Task<List<IPHttpApplication>> allApps)
         {
             this.configurationManager = conf;
             this.AllApps = allApps;
