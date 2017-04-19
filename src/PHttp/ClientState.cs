@@ -1,7 +1,12 @@
-﻿namespace PHttp
-{
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-    public enum ClientState
+namespace PHttp
+{
+    enum ClientState
     {
         ReadingProlog,
         ReadingHeaders,

@@ -4,64 +4,56 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
-using System.Reflection;
 using System.IO;
+using System.Reflection;
 using PHttp.Application;
 
 namespace PHttp
 {
     public class Startup
     {
-        public Dictionary<string, IPHttpApplication> _appInstances = new Dictionary<string, IPHttpApplication>();
 
         /// <summary>
-        /// First method that we use as an test for making reflection and load apps.
+        /// It loads the dll of an application from a specific path. 
         /// </summary>
-        /// <param name="Dlls"></param>
-        public void LoadApps(PHttpServerConfig Dlls)
+        /// <param name="PhysicalPath">Sting:Application physical path.</param>
+        /// <returns>IPHttpApplication: Application instance.</returns>
+        public static IPHttpApplication LoadApp(string PhysicalPath)
         {
-            foreach (var Dll in Dlls.sites)
+            DirectoryInfo info = new DirectoryInfo(PhysicalPath);
+
+            //make sure path aren't empty or null.
+            if (string.IsNullOrEmpty(PhysicalPath)) { return null; }
+
+            //make sure directory exists.
+            if (!info.Exists) { return null; }
+
+            //loop through all dll files in directory.
+            foreach (FileInfo file in info.GetFiles("*.dll"))
             {
-                if (string.IsNullOrEmpty(Dll.physicalPath)) { return; } //sanity check
-
-                DirectoryInfo info = new DirectoryInfo(Dll.physicalPath);
-                if (!info.Exists) { return; } //make sure directory exists
-
-              
-                foreach (FileInfo file in info.GetFiles("*.dll")) //loop through all dll files in directory
+                Assembly currentAssembly = null;
+                try
                 {
-                    Assembly currentAssembly = null;
-                    try
-                    {
-                        var name = AssemblyName.GetAssemblyName(file.FullName);
-                        currentAssembly = Assembly.Load(name);
-                    }
-                    catch (Exception ex)
-                    {
-                        continue;
-                    }
+                    var name = AssemblyName.GetAssemblyName(file.FullName);
+                    currentAssembly = Assembly.Load(name);
+                }
+                catch (Exception ex)
+                {
+                    continue;
+                }
 
-                    var types = currentAssembly.GetTypes();
-                    foreach (var type in types)
+                foreach (var type in currentAssembly.GetTypes())
+                {
+                    if (type != typeof(IPHttpApplication) && typeof(IPHttpApplication).IsAssignableFrom(type))
                     {
-                        if (type != typeof(IPHttpApplication) && typeof(IPHttpApplication).IsAssignableFrom(type))
-                        {
-                            if (_appInstances.ContainsKey(Dll.virtualPath)) { }
-                            else
-                            {
-                                _appInstances.Add(Dll.virtualPath, (IPHttpApplication)Activator.CreateInstance(type));
-                            }
-                        }
+                        return ((IPHttpApplication)Activator.CreateInstance(type));
                     }
                 }
-            }
-            foreach (var el in _appInstances)
-            {
-                //Console.WriteLine("Msg: {0}", el.Start());
 
-                Console.WriteLine("   + Instance Type: {0}", el.ToString());
             }
+            return null;
         }
+
 
         /// <summary>
         /// It loads all the dll of an application from a specific path. 
@@ -71,7 +63,7 @@ namespace PHttp
         public async Task<List<IPHttpApplication>> LoadApps(string path)
         {
             DirectoryInfo info = new DirectoryInfo(path);
-            var impl = new List<Application.IPHttpApplication>();
+            var impl = new List<IPHttpApplication>();
 
             //make sure path aren't empty or null.
             if (string.IsNullOrEmpty(path)) { return impl; }
@@ -104,6 +96,6 @@ namespace PHttp
             }
             return impl;
         }
-    }
 
+    }
 }

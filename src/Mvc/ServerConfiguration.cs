@@ -100,7 +100,7 @@ namespace Mvc
         {
             string rootpath = "../../../";
 
-            string[] ingoreFolders = { "PHttp", "Mvc", "Franci_Framework", "packages", ".vs", "artifacts" };
+            string[] ingoreFolders = { "PHttp", "Mvc", "Heko", "packages", ".vs", "artifacts" };
 
             List<string> directoriesSites = GetDirectories(rootpath, ingoreFolders);
 

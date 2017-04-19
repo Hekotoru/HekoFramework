@@ -98,7 +98,6 @@ namespace Heko
 
             /// This object is the handler of the respond.
             RequestHandler ResHandler = new RequestHandler(configurationManager, AsyncAllApps);
-
             using (var server = new HttpServer(configurationManager.port))
             {
                 // New requests are signaled through the RequestReceived
@@ -111,7 +110,7 @@ namespace Heko
 
                 // Start the default web browser.
 
-                Process.Start(String.Format("http://{0}/", server.EndPoint));
+                Process.Start(String.Format("http://{0}/", server.EndPoint));   
 
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
