@@ -14,6 +14,8 @@ namespace Mvc
         public Request Request;
         public HttpContext httpContext; 
         public Routes route;
+
+        public User User { get; set; }
         public ControllerBase()
         {
             httpContext = new HttpContext();

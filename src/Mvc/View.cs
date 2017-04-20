@@ -16,10 +16,6 @@ namespace Mvc
         public string path;
         public object data;
         public int statusCode;
-        /// <summary>
-        /// Identify if the view exist.
-        /// </summary>
-        bool NotExistingView = true;
 
         /// <summary>
         /// Container of specific view name.
@@ -29,13 +25,13 @@ namespace Mvc
         /// <summary>
         /// Name of the controller;
         /// </summary>
-        string ControllerName;
+        string controllerName;
 
 
         public string physicalPath;
         public View(int _statusCode, object _data, string _controllerName, string _physicalPath, string _customView)
         {
-            ControllerName = _controllerName;
+            controllerName = _controllerName;
             CustomView = _customView;
             data = _data;
             path = _physicalPath;
@@ -55,25 +51,37 @@ namespace Mvc
 
         MemoryStream AResult.Content()
         {
-            string defaultViewPath = path + "/Views/" + this.ControllerName;
-            string customViewPath = path + "/Views/" + this.CustomView;
+            string pathNew = path.Replace("/bin/Debug", "");
+            string defaultViewPath = pathNew + "/Views/" + this.controllerName;
+            string customViewPath = pathNew + "/Views/" + this.CustomView;
             byte[] dataDynamicView = null;
 
             customViewPath += ".html";
             defaultViewPath += ".html";
 
+            /// If the custom view parameter was entered. 
+            if (!string.IsNullOrEmpty(customViewPath))
+            {
+                if (File.Exists(customViewPath))
+                {
+                    dataDynamicView = File.ReadAllBytes(customViewPath);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else  /// If the custom view parameter was not entered. 
+            {
                 if (File.Exists(defaultViewPath))
                 {
                     dataDynamicView = File.ReadAllBytes(defaultViewPath);
                 }
                 else
                 {
-                if (File.Exists(customViewPath))
-                {
-                    dataDynamicView = File.ReadAllBytes(customViewPath);
+                    return null;
                 }
             }
-
 
             var template = Handlebars.Compile(Encoding.Default.GetString(dataDynamicView));
             var result = template(this.data);

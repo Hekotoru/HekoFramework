@@ -78,7 +78,7 @@ namespace Heko
             /// Load all active apps from configuration loaded.
             foreach (Site site in configurationManager.sites)
             {
-                AsyncAllApps = startup.LoadApps(site.physicalPath + "/bin/Debug");
+                AsyncAllApps = startup.LoadApps(site.physicalPath);
 
                 foreach (IPHttpApplication app in AsyncAllApps.Result)
                 {
@@ -97,8 +97,7 @@ namespace Heko
             }
 
             /// This object is the handler of the respond.
-            RespondHandler ResHandler = new RespondHandler(configurationManager, AsyncAllApps);
-
+            RequestHandler ResHandler = new RequestHandler(configurationManager, AsyncAllApps);
             using (var server = new HttpServer(configurationManager.port))
             {
                 // New requests are signaled through the RequestReceived
@@ -111,7 +110,7 @@ namespace Heko
 
                 // Start the default web browser.
 
-                Process.Start(String.Format("http://{0}/", server.EndPoint));
+                Process.Start(String.Format("http://{0}/", server.EndPoint));   
 
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();

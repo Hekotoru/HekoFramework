@@ -1,4 +1,5 @@
-﻿// Taken from http://www.yoda.arachsys.com/csharp/miscutil/
+﻿
+// Taken from http://www.yoda.arachsys.com/csharp/miscutil/
 
 using System;
 using System.IO;

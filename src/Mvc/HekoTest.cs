@@ -93,7 +93,7 @@ namespace Mvc
             //string defaultPattern = "{controller}/{action}/{id}";
             string URLPath = "";
             ControllerBase baseController = new ControllerBase();
-            DirectoryInfo directoryInfo = new DirectoryInfo(AppSite.physicalPath + "/bin/Debug");
+            DirectoryInfo directoryInfo = new DirectoryInfo(AppSite.physicalPath);
             FileInfo[] fileInfo = directoryInfo.GetFiles("*.dll");
 
             foreach (FileInfo fi in fileInfo)
@@ -126,7 +126,7 @@ namespace Mvc
 
                             foreach (var attribute in attributes)
                             {
-                                if (attribute.GetType().IsSubclassOf(typeof(HttpMethod)))
+                                if (attribute.GetType().IsSubclassOf(typeof(Attribute)))
                                 {
                                     string httpMethod = attribute.GetType().Name;
                                     httpMethod = httpMethod.ToUpper().Replace("HTTP", "");
@@ -137,6 +137,7 @@ namespace Mvc
                                 }
 
                             }
+                            URLPath = "";
                         }
 
                     }
@@ -152,6 +153,9 @@ namespace Mvc
         /// <returns>Object: Action with to precessed.</returns>
         public object ExecuteAction(Dictionary<string, object> RequestAction)
         {
+
+            AResult result;
+
             if (Routes == null)
             {
                 ///TODO: resolver esto.
@@ -164,8 +168,15 @@ namespace Mvc
                 {
                     if (route.UrlPath == RequestAction["URLPath"].ToString())
                     {
+                        /// TODO: si no hay metodo definido, aceptarlocomo si fuera un Get por defecto
+                        //if (route.ControllerName != RequestAction["HttpMethod"].ToString())
+                        //  {
+                        //      return "500";
+                        //  }
+
+                        //   else {
                         ControllerBase baseController = new ControllerBase();
-                        DirectoryInfo directoryInfo = new DirectoryInfo(AppSite.physicalPath + "/bin/Debug");
+                        DirectoryInfo directoryInfo = new DirectoryInfo(AppSite.physicalPath);
                         FileInfo[] fileInfo = directoryInfo.GetFiles("*.dll");
 
                         foreach (FileInfo fi in fileInfo)
@@ -192,10 +203,35 @@ namespace Mvc
 
                                     if (baseController.GetType().Name == route._controller)
                                     {
+
                                         MethodInfo method = baseController.GetType().GetMethod(route._action);
-                                        AResult result = (AResult)method.Invoke(baseController, new object[] { });
+                                        AuthorizeAttribute attribute = (AuthorizeAttribute)method.GetCustomAttribute(typeof(AuthorizeAttribute));
+                                        User user = null;
+
+                                        if (attribute != null)
+                                        {
+                                            if (!attribute.IsAuthorized(baseController.Request))
+                                            {
+                                                Console.WriteLine("user no authorized..");
+
+                                                /// TODO: deberia de cargar la configuracion del context
+                                                /// la configuracion del usuario que crea la app.
+                                                ServerConfiguration conf = new ServerConfiguration();
+                                                conf.Load();
+
+                                            }
+                                            else
+                                            {
+                                                result = (AResult)method.Invoke(baseController, new object[] { });
+                                                Headers = baseController.httpContext.Headers;
+                                                return result;
+                                            }
+                                        }
+
+                                        result = (AResult)method.Invoke(baseController, new object[] { });
                                         Headers = baseController.httpContext.Headers;
                                         return result;
+
                                     }
 
                                 }

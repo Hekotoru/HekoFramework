@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PHttp
 {
-    internal class HttpReadBuffer
+    public class HttpReadBuffer
     {
         private readonly int _bufferSize;
         private StringBuilder _lineBuffer;

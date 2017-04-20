@@ -15,12 +15,12 @@ namespace Heko
     /// <summary>
     /// This class is responsible for all responses to the client
     /// </summary>
-    public class RespondHandler
+    public class RequestHandler
     {
         /// <summary>
         /// Container of the Server configuration.
         /// </summary>
-        Mvc.ServerConfiguration configurationManager;
+        ServerConfiguration configurationManager;
 
         /// <summary>
         /// Application which serves the framework.
@@ -51,7 +51,7 @@ namespace Heko
         /// Default Constructor.
         /// </summary>
         /// <param name="conf">PHttp.ConfigurationManager: Object of the configuration of the server</param>
-        public RespondHandler(Mvc.ServerConfiguration conf, Task<List<IPHttpApplication>> allApps)
+        public RequestHandler(ServerConfiguration conf, Task<List<IPHttpApplication>> allApps)
         {
             this.configurationManager = conf;
             this.AllApps = allApps;
@@ -65,6 +65,7 @@ namespace Heko
         public HttpOutputStream GetRespond(HttpRequestEventArgs requestEvent)
         {
             ActionRequest = new Dictionary<string, object>();
+            Site site;
 
             /// Array of the URL path received.
             string[] UrlSplited = requestEvent.Request.Path.Replace("favicon.ico", string.Empty).Split('/');
@@ -75,8 +76,8 @@ namespace Heko
 
             if (requestEvent.Request.Path.Equals("/"))
             {
-                requestEvent.Response.ContentType = HttpMimeType.
-                    GetMimeType(Path.GetExtension(configurationManager.defaultDocument["index"]));
+                requestEvent.Response.ContentType = HttpMimeType
+                    .GetMimeType(Path.GetExtension(configurationManager.defaultDocument["index"]));
                 requestEvent.Response.Status = "200";
                 data = File.ReadAllBytes(configurationManager.defaultDocument["index"]);
             }
@@ -93,51 +94,70 @@ namespace Heko
                 // else: execute method of one of the apps loaded.
                 else
                 {
+                    string URLPath = requestEvent.Request.Path.Replace("/", "").ToLower();
 
-                    ActionRequest.Add("URLPath", requestEvent.Request.Path.Replace("/" + SiteName, "").ToLower());
-                    ActionRequest.Add("HttpMethod", requestEvent.Request.HttpMethod);
-                    ActionRequest.Add("Params", requestEvent.Request.Form);
-                    ActionRequest.Add("Header", requestEvent.Request.Headers);
-
-                    Dictionary<string, HttpFile> files = new Dictionary<string, HttpFile>();
-
-                    for (int i = 0; i < requestEvent.Request.Files.Count; i++)
+                    if (URLPath.Equals(SiteName.ToLower()))
                     {
-                        HttpPostedFile file = requestEvent.Request.Files.Get(i);
-                        HttpFile httpFile = new HttpFile(file.ContentLength, file.ContentType, file.FileName, file.InputStream);
-                        files.Add(requestEvent.Request.Files.GetKey(i), httpFile);
-                    }
-                    ActionRequest.Add("Files", files);
+                        site = configurationManager.GetSiteByVirtualPath(SiteName);
 
-                    foreach (IPHttpApplication Application in AllApps.Result)
-                    {
-                        Site AppSite = (Site)Application.GetSite();
-
-                        if (AppSite.virtualPath.ToLower() == SiteName.ToLower())
+                        if (string.IsNullOrEmpty(site.defaultDocument["index"]))
                         {
-                            var response = Application.ExecuteAction(ActionRequest);
-                            requestEvent.Response.Status = ((AResult)response).StatusCode().ToString();
-                            requestEvent.Response.ContentType = ((AResult)response).ContentType();
+                            requestEvent.Response.ContentType = HttpMimeType.GetMimeType(Path.GetExtension(configurationManager.defaultDocument["index"]));
+                            requestEvent.Response.Status = "200";
+                            data = File.ReadAllBytes(configurationManager.defaultDocument["index"]);
+                        }
+                        else
+                        {
+                            requestEvent.Response.ContentType = HttpMimeType.GetMimeType(Path.GetExtension(site.defaultDocument["index"]));
+                            requestEvent.Response.Status = "200";
+                            data = File.ReadAllBytes(site.defaultDocument["index"]);
+                        }
+                    }
+                    else // TODO: verificar esta parte.
+                    {
+                        ActionRequest.Add("URLPath", requestEvent.Request.Path.Replace("/" + SiteName, "").ToLower());
+                        ActionRequest.Add("HttpMethod", requestEvent.Request.HttpMethod);
+                        ActionRequest.Add("Params", requestEvent.Request.Form);
+                        ActionRequest.Add("Header", requestEvent.Request.Headers);
 
-                            try
+                        Dictionary<string, HttpFile> files = new Dictionary<string, HttpFile>();
+
+                        for (int i = 0; i < requestEvent.Request.Files.Count; i++)
+                        {
+                            HttpPostedFile file = requestEvent.Request.Files.Get(i);
+                            HttpFile httpFile = new HttpFile(file.ContentLength, file.ContentType, file.FileName, file.InputStream);
+                            files.Add(requestEvent.Request.Files.GetKey(i), httpFile);
+                        }
+                        ActionRequest.Add("Files", files);
+
+                        foreach (IPHttpApplication Application in AllApps.Result)
+                        {
+                            Site AppSite = (Site)Application.GetSite();
+
+                            if (AppSite.virtualPath.ToLower() == SiteName.ToLower())
                             {
-                                stream = ((AResult)response).Content();
-                                return new HttpOutputStream(stream);
-                            }
-                            catch (Exception ex)
-                            {
-                                requestEvent.Response.ContentType = HttpMimeType.GetMimeType(Path.GetExtension(configurationManager.errorPages["404"]));
-                                requestEvent.Response.Status = "404";
-                                data = File.ReadAllBytes(configurationManager.errorPages["404"]);
+                                var response = Application.ExecuteAction(ActionRequest);
+                                requestEvent.Response.Status = ((AResult)response).StatusCode().ToString();
+                                requestEvent.Response.ContentType = ((AResult)response).ContentType();
+
+                                try
+                                {
+                                    stream = (MemoryStream)((AResult)response).Content();
+                                    return new HttpOutputStream(stream);
+                                }
+                                catch (Exception ex)
+                                {
+                                    requestEvent.Response.ContentType = HttpMimeType.GetMimeType(Path.GetExtension(configurationManager.errorPages["404"]));
+                                    requestEvent.Response.Status = "404";
+                                    data = File.ReadAllBytes(configurationManager.errorPages["404"]);
+                                }
+
                             }
 
                         }
-
                     }
 
-
                     /// TODO:hacer que se actualize site en el js despues que el user cree algun view. 
-
                 }
             }
 
@@ -159,6 +179,7 @@ namespace Heko
             }
             return false;
         }
+
 
 
 

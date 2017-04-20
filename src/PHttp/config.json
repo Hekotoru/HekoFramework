@@ -14,7 +14,7 @@
 		"501": "../../../PHttp/Resources/501.html",
 		"502": "../../../PHttp/Resources/502.html"
 	},
-	"port": 8081,
+	"port": 8888,
   "sites": [
     
     {
@@ -24,7 +24,7 @@
       "directoryBrowsing": true,
       "errorPages": { },
       "name": "Default Site",
-      "physicalPath": "../../../App",
+      "physicalPath": "../../../App/bin/Debug",
       "virtualPath": "App"
     }
   ]

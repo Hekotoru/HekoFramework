@@ -37,6 +37,10 @@
       <HintPath>..\packages\Handlebars.Net.1.8.0\lib\portable-net45+sl5+wp8+win8\Handlebars.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="JWT, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\JWT.2.3.1\lib\net45\JWT.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -52,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AResult.cs" />
+    <Compile Include="AuthorizeAttribute.cs" />
     <Compile Include="ServerConfiguration.cs" />
     <Compile Include="Content.cs" />
     <Compile Include="ControllerBase.cs" />
@@ -64,7 +69,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="Routes.cs" />
+    <Compile Include="Session.cs" />
     <Compile Include="Site.cs" />
+    <Compile Include="User.cs" />
     <Compile Include="View.cs" />
   </ItemGroup>
   <ItemGroup>
