@@ -51,19 +51,37 @@ namespace Mvc
 
         MemoryStream AResult.Content()
         {
-            string defaultViewPath = path + "/Views/" + this.controllerName;
+            string pathNew = path.Replace("/bin/Debug", "");
+            string defaultViewPath = pathNew + "/Views/" + this.controllerName;
+            string customViewPath = pathNew + "/Views/" + this.CustomView;
             byte[] dataDynamicView = null;
 
+            customViewPath += ".html";
             defaultViewPath += ".html";
 
+            /// If the custom view parameter was entered. 
+            if (!string.IsNullOrEmpty(customViewPath))
+            {
+                if (File.Exists(customViewPath))
+                {
+                    dataDynamicView = File.ReadAllBytes(customViewPath);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else  /// If the custom view parameter was not entered. 
+            {
                 if (File.Exists(defaultViewPath))
                 {
                     dataDynamicView = File.ReadAllBytes(defaultViewPath);
                 }
                 else
                 {
+                    return null;
+                }
             }
-
 
             var template = Handlebars.Compile(Encoding.Default.GetString(dataDynamicView));
             var result = template(this.data);

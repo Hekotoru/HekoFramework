@@ -75,6 +75,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home.html" />
+    <Content Include="Views\index.html" />
+    <Content Include="Views\login.html" />
+    <Content Include="Views\register.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

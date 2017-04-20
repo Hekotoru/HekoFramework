@@ -78,7 +78,7 @@ namespace Heko
             /// Load all active apps from configuration loaded.
             foreach (Site site in configurationManager.sites)
             {
-                AsyncAllApps = startup.LoadApps(site.physicalPath + "/bin/Debug");
+                AsyncAllApps = startup.LoadApps(site.physicalPath);
 
                 foreach (IPHttpApplication app in AsyncAllApps.Result)
                 {

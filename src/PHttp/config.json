@@ -24,7 +24,7 @@
       "directoryBrowsing": true,
       "errorPages": { },
       "name": "Default Site",
-      "physicalPath": "../../../App",
+      "physicalPath": "../../../App/bin/Debug",
       "virtualPath": "App"
     }
   ]

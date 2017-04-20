@@ -93,7 +93,7 @@ namespace Mvc
             //string defaultPattern = "{controller}/{action}/{id}";
             string URLPath = "";
             ControllerBase baseController = new ControllerBase();
-            DirectoryInfo directoryInfo = new DirectoryInfo(AppSite.physicalPath + "/bin/Debug");
+            DirectoryInfo directoryInfo = new DirectoryInfo(AppSite.physicalPath);
             FileInfo[] fileInfo = directoryInfo.GetFiles("*.dll");
 
             foreach (FileInfo fi in fileInfo)
@@ -176,7 +176,7 @@ namespace Mvc
 
                         //   else {
                         ControllerBase baseController = new ControllerBase();
-                        DirectoryInfo directoryInfo = new DirectoryInfo(AppSite.physicalPath + "/bin/Debug");
+                        DirectoryInfo directoryInfo = new DirectoryInfo(AppSite.physicalPath);
                         FileInfo[] fileInfo = directoryInfo.GetFiles("*.dll");
 
                         foreach (FileInfo fi in fileInfo)
