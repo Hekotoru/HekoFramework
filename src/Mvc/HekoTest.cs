@@ -195,8 +195,9 @@ namespace Mvc
                                     NameValueCollection header = (NameValueCollection)RequestAction["Header"];
                                     NameValueCollection parameters = (NameValueCollection)RequestAction["Params"];
                                     Dictionary<string, HttpFile> files = (Dictionary<string, HttpFile>)RequestAction["Files"];
+                                    NameValueCollection queryStrings = (NameValueCollection)RequestAction["QueryString"];
 
-                                    baseController.Request = new Request(urlPath, mehod, header, parameters, files);
+                                    baseController.Request = new Request(urlPath, mehod, header, parameters, files,queryStrings);
 
                                     baseController.route = route;
                                     baseController.httpContext.Site.physicalPath = AppSite.physicalPath;
