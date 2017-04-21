@@ -37,6 +37,8 @@ namespace Mvc
         /// </summary>
         public Dictionary<string, HttpFile> Files;
 
+        public NameValueCollection QueryString;
+
         /// <summary>
         /// Constructor whit parameters of the request.
         /// </summary>
@@ -45,12 +47,13 @@ namespace Mvc
         /// <param name="headers">Header of request.</param>
         /// <param name="param">Parameters of request.</param>
         /// <param name="files">files of requests.</param>
-        public Request(string urlPath, string httpMethod, NameValueCollection headers, NameValueCollection param, Dictionary<string, HttpFile> files)
+        public Request(string urlPath, string httpMethod, NameValueCollection headers, NameValueCollection param, Dictionary<string, HttpFile> files, NameValueCollection _queryString)
         {
             this.UrlPath = urlPath;
             this.Files = files;
             this.Headers = headers;
             this.Params = param;
+            this.QueryString = _queryString;
         }
 
         /// <summary>

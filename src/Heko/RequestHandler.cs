@@ -119,7 +119,7 @@ namespace Heko
                         ActionRequest.Add("HttpMethod", requestEvent.Request.HttpMethod);
                         ActionRequest.Add("Params", requestEvent.Request.Form);
                         ActionRequest.Add("Header", requestEvent.Request.Headers);
-
+                        ActionRequest.Add("QueryString", requestEvent.Request.QueryString);
                         Dictionary<string, HttpFile> files = new Dictionary<string, HttpFile>();
 
                         for (int i = 0; i < requestEvent.Request.Files.Count; i++)
